@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{ data['title'] }}</title>
+  </head>
+  <body>
+<h1>
+    Enter your user-name to retrieve information from database:
+</h1>
+<form method="post">
+  Username: <input name="username"/>
+  <br/><br/>
+  <button type="submit">Submit</button>
+</form>
+
+<h1>Information from database</h1>
+    <h1>Username: {{ data['username'] }}</h1></br>
+    <h1>Email: {{ data['email'] }}</h1>
+  </body>
+</html>
