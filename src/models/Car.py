@@ -10,33 +10,36 @@ class Car:
         self.location = location
         self.status = status
 
-def listCars():
+
+def list_of_cars():
     cars = []
     driver = _get_connection()
-    if driver != None:
+    if driver:
         with driver.session() as session:
             try:
-                result = session.run("MATCH (c:Car) RETURN ID(c) as id, c.make as make, c.model as model, c.year as year, c.location as location, c.status as status")
-                for record in result:
-                    cars.append({
-                    'id' : record["id"],
-                    'make' : record["make"],
-                    'model' : record["model"],
-                    'year' : record["year"],
-                    'location' : record["location"],
-                    'status' : record["status"]
-                    })
-                print(cars)
-                return cars
+                result = session.run(
+                    "MATCH (c:Car) RETURN ID(c) as id, c.make as make, c.model as model, c.year as year, c.location as location, c.status as status"
+                )
+                cars = [{
+                        'id': record["id"],
+                        'make': record["make"],
+                        'model': record["model"],
+                        'year': record["year"],
+                        'location': record["location"],
+                        'status': record["status"]
+                    }
+                    for record in result]
+                #print(cars)
             except Exception as e:
-                print(f"Error: ",e)
-                return cars
-    print("Driver not connected")
+                print(f"Error: {e}")
+    else:
+        print("The driver is not connected")
     return cars
 
-def addCar(make,model,year,location,status):
+
+def add_car(make,model,year,location,status):
     driver = _get_connection()
-    if driver != None:
+    if driver:
         with driver.session() as session:
             try:
                 session.run(
@@ -46,45 +49,44 @@ def addCar(make,model,year,location,status):
                     year=year,
                     location=location,
                     status=status
-                    )
-                return
+                )
+                print(f"Car added: Make - {make}, Model - {model}")
             except Exception as e:
                 print(f"Error: {e}")
-                return
-    print("Driver not connected")
-    return
+    else:
+        print("The driver is not connected")
 
-def updateCar(id, newStatus):
+
+def update_car(id, newStatus):
     driver = _get_connection()
-    if driver != None:
+    if driver:
         with driver.session() as session:
             try:
-                session.run(
+                result = session.run(
                     "MATCH (c:Car) WHERE ID(c) = $id SET c.status = $newStatus", 
                     id=id, 
                     newStatus=newStatus
                 )
-                print(f"ID: {id}, New Status: {newStatus}")
-                return
+                if result.summary().counters.updates == 0:
+                    print(f"No car found with ID: {id}")
+                else:
+                    print(f"Car with ID {id} updated with new status: {newStatus}")
             except Exception as e:
-                print(f"Error: ",e)
-                print(f"{id} is not a Car.")
-                return
-    print("Driver is not connected")
-    return
+                print(f"Error: {e}")
+    else:
+        print("The driver is not connected")
 
-def deleteCar(id):
+
+def delete_car(id):
     driver = _get_connection()
-    if driver != None:
+    if driver:
         with driver.session() as session:
             try:
                 session.run(
                     "MATCH (c:Car) WHERE ID(c) = $id DELETE c",
                     id=id
                 )
-                return
             except Exception as e:
                 print(f"Error: {e}")
-                return
-    print("Driver is not connected")
-    return
+    else:
+        print("The driver is not connected")

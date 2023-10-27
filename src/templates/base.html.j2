@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  </head>
+
+  <body>
+    <!-- Navigation links -->
+    <div class="navbar">
+        <a href="/cars">To origin</a>
+        <a href="/cars/add">Add car</a>
+        <a href="/cars/update">Update car details</a>
+        <a href="/cars/delete">Delete car</a>
+    </div>
+
+    {% block content %} {% endblock %}
+
+  </body>
+</html>

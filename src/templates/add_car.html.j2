@@ -1,13 +1,12 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Add Car</title>
-  </head>
-  <body>
-<h1>
-    Enter details:
-</h1>
+{% extends 'base.html.j2' %}
+
+{% block content %}
+<h1>Enter details:</h1>
+
+{% if error_message %}
+<p class="error">{{ error_message }}</p>
+{% endif %}
+
 <form method="post">
   Make: <input name="make"/>
   Model: <input name="model"/>
@@ -17,5 +16,4 @@
   <br/><br/>
   <button type="submit">Submit</button>
 </form>
-  </body>
-</html>
+{% endblock %}

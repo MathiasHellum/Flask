@@ -1,13 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>{{ data['title'] }}</title>
-  </head>
-  <body>
-<h1>
-    List cars:
-</h1>
+{% extends "base.html.j2" %}
+
+{% block content %}
+    <h1>Cars in the database:</h1>
     {% for car in data %}
       <h2>{{ car['make'] }}</h2>
       <p>Model: {{ car['model'] }}</p>
@@ -19,5 +13,4 @@
         <button type="submit">Delete</button>
       </form>
     {% endfor %}
-  </body>
-</html>
+{% endblock %}

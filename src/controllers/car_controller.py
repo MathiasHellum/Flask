@@ -1,84 +1,87 @@
 from src import app
 from neo4j import GraphDatabase, Driver, AsyncGraphDatabase, AsyncDriver
 import re
-from src.models.Car import listCars, addCar, updateCar, deleteCar
-# from src.models.Customer import listCustomers, addCustomer, updateCustomer, deleteCustomer
-# from src.models.Employee import listEmployees, addEmployee, updateEmployee, deleteEmployee
+from src.models.Car import list_of_cars, add_car, update_car, delete_car
 from flask import Flask, render_template, redirect, request, jsonify
 
-@app.route('/cars')
-def car_index():
-    data = []
-    try:
-        data = listCars()
-    except Exception as e:
-        print (f"Error: {e}")
-    return jsonify(data)
-    return render_template('cars.html.j2', data = data)
 
-@app.route('/cars/list')
-def car_list():
-    data = []
+@app.route('/cars')
+def car_overview():
     try:
-        data = listCars()
+        data = list_of_cars()
+        if not data:
+            return render_template('cars.html.j2', data=data)  # Display an empty page if no cars found
     except Exception as e:
-        print (f"Error: {e}")
-    return render_template('cars.html.j2', data = data)
+        error_message = f"An error occurred: {e}"
+        return render_template('error.html.j2', error_message=error_message)
+    return render_template('cars.html.j2', data=data)
+
 
 @app.route('/cars/add', methods=["GET", "POST"])
-def add_car():
-    data = []
+def add_car_route():
     if request.method == "POST":
         make = request.form["make"]
         model = request.form["model"]
         year = request.form["year"]
         location = request.form["location"]
         status = request.form["status"]
+        
+        # Validate inputs
+        if not make or not model or not year or not location or not status:
+            error_message = "All fields are required."
+            return render_template('add_car.html.j2', error_message=error_message)    
         try:
-            addCar(make,model,year,location,status)
-            data = listCars()
+            add_car(make,model,year,location,status)
+            # Redirect to car overview page after successful addition
+            return redirect('/cars')
         except Exception as e:
-            print(f"Error {e}")
-        return jsonify(data)
-        return render_template('cars.html.j2', data=data)
+            error_message = f"Error: {e}"
+            return render_template('add_car.html.j2', error_message=error_message)
     return render_template('add_car.html.j2')
 
+
 @app.route('/cars/update', methods=["GET", "POST"])
-def update_car():
+def update_car_route():
     if request.method == "POST":
         id = int(request.form["id"])
         newStatus = request.form["newStatus"]
         try:
-            updateCar(id, newStatus)
-            data = listCars()
-            return jsonify(data)    
+            update_car(id, newStatus)
+            data = list_of_cars()
+            return render_template('cars.html.j2', data=data)
         except Exception as e:
             print(f"Error: {e}")
     return render_template('update_car.html.j2')
 
-@app.route('/cars/delete', methods=["GET", "POST"])
-def delete_car():
-    if request.method == "POST":
-        id = int(request.form["id"])
-        try:
-            deleteCar(id)
-            data = listCars()
-            return jsonify(data)
-        except Exception as e:
-            print(f"Error: {e}")
-    return render_template('delete_car.html.j2')
 
-@app.route('/cars/list/delete', methods=["GET", "POST"])
-def delete_car_from_list():
+@app.route('/cars/delete', methods=["GET", "POST"])
+def delete_car_route():
     if request.method == "POST":
         id = int(request.form["id"])
         try:
-            deleteCar(id)
-            data = listCars()
+            delete_car(id)
+            data = list_of_cars()
+            #return jsonify(data)
             return render_template('cars.html.j2', data=data)
         except Exception as e:
             print(f"Error: {e}")
     return render_template('delete_car.html.j2')
+
+
+@app.route('/cars/delete', methods=["GET", "POST"])
+def delete_car_from_list_route():
+    if request.method == "POST":
+        id = int(request.form["id"])
+        try:
+            delete_car(id)
+            data = list_of_cars()
+            #return jsonify(data)
+            return render_template('cars.html.j2', data=data)
+        except Exception as e:
+            print(f"Error: {e}")
+    return render_template('delete_car.html.j2')
+
+
 
 # @app.route('/customers')
 # def customer_index():
