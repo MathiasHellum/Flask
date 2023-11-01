@@ -1,0 +1,30 @@
+{% extends 'base.html.j2' %}
+
+{% block content %}
+<h1>Employee Overview:</h1>
+
+{% if data %}
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Address</th>
+        <th>Branch</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for employee in data %}
+        <tr>
+          <td>{{ employee.id }}</td>
+          <td>{{ employee.name }}</td>
+          <td>{{ employee.address }}</td>
+          <td>{{ employee.branch }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p>No employees found.</p>
+{% endif %}
+{% endblock %}

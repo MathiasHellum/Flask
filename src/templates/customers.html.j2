@@ -1,0 +1,31 @@
+{% extends 'base.html.j2' %}
+
+{% block content %}
+<h1>Customers</h1>
+
+{% if data %}
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone Number</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for customer in data %}
+        <tr>
+            <td>{{ customer.id }}</td>
+            <td>{{ customer.name }}</td>
+            <td>{{ customer.email }}</td>
+            <td>{{ customer.phone_number }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>No customers found.</p>
+{% endif %}
+
+{% endblock %}
