@@ -12,11 +12,11 @@ def employee_overview():
     try:
         data = list_of_employees()
         if not data:
-            return render_template('employees.html.j2', data=data)  # Display an empty page if no employees found
+            return render_template('employee_templates/employees.html.j2', data=data)  # Display an empty page if no employees found
     except Exception as e:
         error_message = f"An error occurred: {e}"
         return render_template('error.html.j2', error_message=error_message)
-    return render_template('employees.html.j2', data=data)
+    return render_template('employee_templates/employees.html.j2', data=data)
 
 
 @app.route('/employees/add', methods=["GET", "POST"])
@@ -33,15 +33,15 @@ def add_employee_route():
         # Validate inputs
         if not name or not address or not branch:
             error_message = "All fields are required."
-            return render_template('add_employee.html.j2', error_message=error_message)
+            return render_template('employee_templates/add_employee.html.j2', error_message=error_message)
 
         try:
             add_employee(name, address, branch)
             return redirect('/employees')  # Redirect to employee overview page after successful addition
         except Exception as e:
             error_message = f"Error: {e}"
-            return render_template('add_employee.html.j2', error_message=error_message)
-    return render_template('add_employee.html.j2')
+            return render_template('employee_templates/add_employee.html.j2', error_message=error_message)
+    return render_template('employee_templates/add_employee.html.j2')
 
 
 @app.route('/employees/update', methods=["GET", "POST"])
@@ -60,24 +60,24 @@ def update_employee_route():
             # Validate inputs
             if not newName and not newAddress and not newBranch:
                 error_message = "At least one of the new values (Name, Address, or Branch) is required."
-                return render_template('update_employee.html.j2', error_message=error_message)
+                return render_template('employee_templates/update_employee.html.j2', error_message=error_message)
 
             if not is_valid_employee(id):
                 error_message = "No employee found with the given ID."
-                return render_template('update_employee.html.j2', error_message=error_message)
+                return render_template('employee_templates/update_employee.html.j2', error_message=error_message)
 
             update_employee(id, newName, newAddress, newBranch)
             return redirect('/employees')  # Redirect to employee overview page after successful update
 
         except ValueError:
             error_message = "Invalid ID. Please enter a valid ID."
-            return render_template('update_employee.html.j2', error_message=error_message)
+            return render_template('employee_templates/update_employee.html.j2', error_message=error_message)
 
         except Exception as e:
             error_message = f"An error occurred: {e}"
             return render_template('error.html.j2', error_message=error_message)
 
-    return render_template('update_employee.html.j2')
+    return render_template('employee_templates/update_employee.html.j2')
 
 
 @app.route('/employees/delete', methods=["GET", "POST"])
@@ -92,17 +92,17 @@ def delete_employee_route():
 
             if not is_valid_employee(id):
                 error_message = "No employee found with the given ID."
-                return render_template('delete_employee.html.j2', error_message=error_message)
+                return render_template('employee_templates/delete_employee.html.j2', error_message=error_message)
 
             delete_employee(id)
             return redirect('/employees')  # Redirect to employee overview page after successful deletion
 
         except ValueError:
             error_message = "Invalid ID. Please enter a valid ID."
-            return render_template('delete_employee.html.j2', error_message=error_message)
+            return render_template('employee_templates/delete_employee.html.j2', error_message=error_message)
 
         except Exception as e:
             error_message = str(e)  # Display the error message
-            return render_template('delete_employee.html.j2', error_message=error_message)
+            return render_template('employee_templates/delete_employee.html.j2', error_message=error_message)
 
-    return render_template('delete_employee.html.j2')
+    return render_template('employee_templates/delete_employee.html.j2')

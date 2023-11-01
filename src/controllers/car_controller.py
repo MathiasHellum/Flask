@@ -14,11 +14,11 @@ def car_overview():
     try:
         data = list_of_cars()
         if not data:
-            return render_template('cars.html.j2', data=data)  # Display an empty page if no cars found
+            return render_template('car_templates/cars.html.j2', data=data)  # Display an empty page if no cars found
     except Exception as e:
         error_message = f"An error occurred: {e}"
         return render_template('error.html.j2', error_message=error_message)
-    return render_template('cars.html.j2', data=data)
+    return render_template('car_templates/cars.html.j2', data=data)
 
 
 @app.route('/cars/add', methods=["GET", "POST"])
@@ -36,15 +36,15 @@ def add_car_route():
         # Validate inputs
         if not make or not model or not year or not location or not status:
             error_message = "All fields are required."
-            return render_template('add_car.html.j2', error_message=error_message)    
+            return render_template('car_templates/add_car.html.j2', error_message=error_message)    
         try:
             add_car(make,model,year,location,status)
             # Redirect to car overview page after successful addition
             return redirect('/cars')
         except Exception as e:
             error_message = f"Error: {e}"
-            return render_template('add_car.html.j2', error_message=error_message)
-    return render_template('add_car.html.j2')
+            return render_template('car_templates/add_car.html.j2', error_message=error_message)
+    return render_template('car_templates/add_car.html.j2')
 
 
 @app.route('/cars/update', methods=["GET", "POST"])
@@ -60,24 +60,24 @@ def update_car_route():
             # Validate inputs
             if not newStatus:
                 error_message = "New Status is required."
-                return render_template('update_car.html.j2', error_message=error_message)
+                return render_template('car_templates/update_car.html.j2', error_message=error_message)
             
             if not is_valid(id):
                 error_message = "No car found with the given ID."
-                return render_template('update_car.html.j2', error_message=error_message)
+                return render_template('car_templates/update_car.html.j2', error_message=error_message)
 
             update_car(id, newStatus)
             return redirect('/cars')  # Redirect to car overview page after successful update
 
         except ValueError:
             error_message = "Invalid ID. Please enter a valid ID."
-            return render_template('update_car.html.j2', error_message=error_message)
+            return render_template('car_templates/update_car.html.j2', error_message=error_message)
 
         except Exception as e:
             error_message = f"An error occurred: {e}"
             return render_template('error.html.j2', error_message=error_message)
 
-    return render_template('update_car.html.j2')
+    return render_template('car_templates/update_car.html.j2')
 
 
 @app.route('/cars/delete', methods=["GET", "POST"])
@@ -91,17 +91,17 @@ def delete_car_route():
 
             if not is_valid(id):
                 error_message = "No car found with the given ID."
-                return render_template('delete_car.html.j2', error_message=error_message)
+                return render_template('car_templates/delete_car.html.j2', error_message=error_message)
 
             delete_car(id)
             return redirect('/cars')  # Redirect to car overview page after successful update
 
         except ValueError:
             error_message = "Invalid ID. Please enter a valid ID."
-            return render_template('delete_car.html.j2', error_message=error_message)
+            return render_template('car_templates/delete_car.html.j2', error_message=error_message)
 
         except Exception as e:
             error_message = str(e)  # Display the error message
-            return render_template('delete_car.html.j2', error_message=error_message)
+            return render_template('car_templates/delete_car.html.j2', error_message=error_message)
 
-    return render_template('delete_car.html.j2')
+    return render_template('car_templates/delete_car.html.j2')
