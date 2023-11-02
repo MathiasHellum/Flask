@@ -273,3 +273,28 @@ def get_booking_for_customer(customer_id):
             except Exception as e:
                 print(f"Error: {e}")
     return None
+
+
+def cancel_booking_for_customer(customer_id):
+    driver = _get_connection()
+    if driver:
+        with driver.session() as session:
+            try:
+                # Fetch the car details that the customer booked
+                booked_car_details = get_booking_for_customer(customer_id)
+                if not booked_car_details:
+                    return False
+                
+                # Remove the booking relationship
+                session.run(
+                    "MATCH (c:Customer)-[rel:BOOKED]->(car:Car) WHERE ID(c) = $customer_id DELETE rel",
+                    customer_id=customer_id
+                )
+                
+                # Update car status to available
+                update_car(booked_car_details['id'], "available")
+                return True
+            except Exception as e:
+                print(f"Error: {e}")
+                return False
+    return False

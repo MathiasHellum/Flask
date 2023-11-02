@@ -1,23 +1,9 @@
 from src import app
 from flask import jsonify, redirect, render_template, request, url_for
-from src.models.Car import get_car_by_id, get_all_available_cars, is_valid, list_of_cars
-from src.models.Customer import has_customer_booked_or_rented, book_car_for_customer, list_of_customers, find_customer_by_name_and_phone, find_customer_by_id
+from src.models.Car import get_car_by_id, get_all_available_cars, is_valid, list_of_cars, update_car
+from src.models.Customer import has_customer_booked_or_rented, book_car_for_customer, list_of_customers, find_customer_by_name_and_phone, find_customer_by_id, cancel_booking_for_customer
+from src.controllers.customer_controller import get_booking_for_customer
 
-
-# @app.route('/order-car', methods=["GET"])
-# def show_order_car_form():
-#     all_cars = list_of_cars()
-#     available_cars = [car for car in all_cars if car["status"] == "available"]  # Filter only available cars
-#     customers = list_of_customers()
-
-#     return render_template("endpoints/order_car.html.j2", title="Order Car", cars=available_cars, customers=customers)
-
-# @app.route('/order-car/<string:name>/<string:phone_number>', methods=["GET"])
-# def show_order_car_form(name, phone_number):
-#     available_cars = [car for car in list_of_cars() if car["status"] == "available"]  # Filter only available cars
-#     customer = find_customer_by_name_and_phone(name, phone_number)  # Fetch the specific customer
-
-#     return render_template("order_car.html.j2", title="Order Car", cars=available_cars, selected_customer=customer)
 
 @app.route('/order-car', methods=["GET"])
 def show_order_car_form():
@@ -57,3 +43,24 @@ def order_car():
         return redirect(url_for("customer_info", name=name, phone_number=phone_number))
     #return jsonify({"success": "Car booked successfully"}), 200
 
+
+@app.route('/cancel-booking', methods=["GET"])
+def show_cancel_booking_form():
+    name = request.args.get("name")
+    phone_number = request.args.get("phone_number")
+    selected_customer = find_customer_by_name_and_phone(name, phone_number)
+
+    booked_car = get_booking_for_customer(selected_customer['id'])
+    if not booked_car:
+        return "No booking found for this customer", 404
+
+    return render_template("endpoints/cancel_booking.html.j2", booking=booked_car, selected_customer=selected_customer)
+
+@app.route('/cancel-booking', methods=["POST"])
+def cancel_booking():
+    customer_id = int(request.form["customer_id"])
+    success = cancel_booking_for_customer(customer_id)
+    if success:
+        return redirect(url_for("show_order_car_form"))
+    else:
+        return "Failed to cancel booking", 500

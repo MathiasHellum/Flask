@@ -45,6 +45,9 @@
             <td>{{ booking.status }}</td>
         </tr>
     </table>
+
+    <a href="{{ url_for('show_cancel_booking_form', name=customer.name, phone_number=customer.phone_number) }}">Cancel Order</a>
+
     {% else %}
     <p>You have not booked any cars.</p>
     <a href="{{ url_for('show_order_car_form', name=customer.name, phone_number=customer.phone_number) }}">Order a Car</a>

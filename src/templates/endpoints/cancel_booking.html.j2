@@ -1,0 +1,22 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+<div class="container">
+    <h2>Cancel Booking</h2>
+    {% if booking %}
+    <p>Booking details:</p>
+    <ul>
+        <li>Car Make: {{ booking.make }}</li>
+        <li>Car Model: {{ booking.model }}</li>
+        <li>Year: {{ booking.year }}</li>
+        <li>Location: {{ booking.location }}</li>
+    </ul>
+    <form action="/cancel-booking" method="post">
+        <input type="hidden" name="customer_id" value="{{ selected_customer.id }}">
+        <button type="submit">Cancel Booking</button>
+    </form>
+    {% else %}
+    <p>No active booking found for the customer.</p>
+    {% endif %}
+</div>
+{% endblock %}
