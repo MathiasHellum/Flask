@@ -123,3 +123,41 @@ def delete_car(id):
                 print(f"Error: {e}")
     else:
         print("The driver is not connected")
+
+
+def get_car_by_id(car_id):
+    driver = _get_connection()
+    if driver:
+        with driver.session() as session:
+            try:
+                result = session.run(
+                    "MATCH (c:Car) WHERE ID(c) = $car_id RETURN ID(c) as id, c.make as make, c.model as model, c.year as year, c.location as location, c.status as status",
+                    car_id=car_id
+                )
+                record = result.single()
+                if record:
+                    car = {
+                        'id': record["id"],
+                        'make': record["make"],
+                        'model': record["model"],
+                        'year': record["year"],
+                        'location': record["location"],
+                        'status': record["status"]
+                    }
+                    return car
+            except Exception as e:
+                print(e)
+    return None
+
+
+def get_all_available_cars():
+    driver = _get_connection()
+    if driver:
+        with driver.session() as session:
+            try:
+                result = session.run("MATCH (c:Car) WHERE c.status='available' RETURN ID(c) as id, c.make as make, c.model as model")
+                cars = [{'id': record["id"], 'make': record["make"], 'model': record["model"]} for record in result]
+                return cars
+            except Exception as e:
+                print(str(e))
+    return []

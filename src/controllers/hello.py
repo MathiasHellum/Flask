@@ -2,8 +2,9 @@ from src import app
 from flask import render_template, request, redirect, url_for
 from src.models.User import findUserByUsername
 
+
 #route index
-@app.route('/', methods=["GET", "POST"])
+@app.route('/user', methods=["GET", "POST"])
 def index():
 
     if request.method == "POST":

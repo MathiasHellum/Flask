@@ -1,6 +1,7 @@
 from neo4j import GraphDatabase, Driver
 from src.models.Driver import _get_connection
 import re
+from src.models.Car import get_car_by_id, update_car
 
 class Customer:
     def __init__(self, name, email, phone_number):
@@ -122,3 +123,88 @@ def delete_customer(id):
                 print(f"Error: {e}")
     else:
         print("The driver is not connected")
+
+
+def has_customer_booked_or_rented(customer_id):
+    driver = _get_connection()
+    if driver:
+        with driver.session() as session:
+            try:
+                result = session.run(
+                    "MATCH (cust:Customer)-[:BOOKED|Rented]->(car:Car) WHERE ID(cust) = $customer_id RETURN car",
+                    customer_id=customer_id
+                )
+                record = result.single()
+                return True if record else False
+            except Exception as e:
+                print(e)
+    return False
+
+
+def link_customer_to_car(customer_id, car_id, relationship_type):
+    driver = _get_connection()
+    if driver:
+        with driver.session() as session:
+            try:
+                relationship_query = (
+                    f"MATCH (cust:Customer), (car:Car) "
+                    f"WHERE ID(cust) = $customer_id AND ID(car) = $car_id "
+                    f"CREATE (cust)-[:{relationship_type}]->(car)"
+                )
+                session.run(relationship_query, customer_id=customer_id, car_id=car_id)
+                return True
+            except Exception as e:
+                print(e)
+    return False
+
+
+
+def book_car_for_customer(car_id, customer_id):
+    # First, check if the car is available and the customer hasn't already booked/rented a car.
+    car_details = get_car_by_id(car_id)
+    customer_status = has_customer_booked_or_rented(customer_id)
+
+    if not car_details:
+        raise ValueError("The specified car does not exist.")
+    if car_details['status'] != 'available':
+        raise ValueError("The specified car is not available for booking.")
+    if customer_status:
+        raise ValueError("The customer has already booked or rented a car.")
+
+    # If all checks pass, link the customer to the car with a BOOKED relationship and update the car status.
+    link_status = link_customer_to_car(customer_id, car_id, "BOOKED")
+    try:
+        update_car(car_id, "booked")
+        car_update_status = True
+    except Exception as e:
+        print(e)
+        car_update_status = False
+
+    if link_status and car_update_status:
+        return True
+    else:
+        raise Exception("Failed to book the car for the customer.")
+
+
+def find_customer_by_name_and_phone(name, phone_number):
+    """Finds a customer based on their name and phone number."""
+    driver = _get_connection()
+    if driver:
+        with driver.session() as session:
+            try:
+                result = session.run(
+                    "MATCH (c:Customer) WHERE c.name = $name AND c.phone_number = $phone_number RETURN ID(c) as id, c.name as name, c.email as email, c.phone_number as phone_number",
+                    name=name,
+                    phone_number=phone_number
+                )
+                record = result.single()
+                if record:
+                    return {
+                        'id': record["id"],
+                        'name': record["name"],
+                        'email': record["email"],
+                        'phone_number': record["phone_number"]
+                    }
+            except Exception as e:
+                print(f"Error: {e}")
+    return None

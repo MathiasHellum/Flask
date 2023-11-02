@@ -2,9 +2,6 @@ from neo4j import GraphDatabase, Driver, AsyncGraphDatabase, AsyncDriver
 import re
 from src.models.Driver import _get_connection
 
-URI = "neo4j+s://992844cb.databases.neo4j.io"
-AUTH = ("neo4j", "agX8W2AHT6s5D0vjnJwdU1nFe3redVb7FAHtWvP3d9M")
-
 
 def findUserByUsername(username):
     data = _get_connection().execute_query("MATCH (a:User) where a.username = $username RETURN a;", username=username)

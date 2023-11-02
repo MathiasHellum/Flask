@@ -1,0 +1,17 @@
+{% extends "base.html.j2" %}
+{% block content %}
+
+<div class="container">
+    <!-- Application Heading -->
+    <h1>Welcome to Our Car Booking System</h1>
+    <p>This system allows you to manage cars, customers, and employees. Select your role to proceed:</p>
+
+    <!-- Role Selection Buttons -->
+    <div class="role-selection">
+        <a href="/customer" class="role-btn">Customer</a>
+        <a href="/employees" class="role-btn">Employee</a>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,4 +1,4 @@
-/* styles.css */
+/* Existing styles */
 
 .navbar {
     background-color: #333;
@@ -31,4 +31,54 @@ button:hover {
     background-color: #45a049;
 }
 
+/* New styles for the landing page */
 
+.container {
+    max-width: 800px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+h1 {
+    font-size: 32px;
+    margin-bottom: 20px;
+}
+
+.role-selection {
+    margin-top: 40px;
+    margin-bottom: 40px;
+}
+
+.role-btn, .sub-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 10px;
+    font-size: 18px;
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.role-btn {
+    background-color: #007BFF;
+}
+
+.role-btn:hover {
+    background-color: #0056b3;
+}
+
+.login-register {
+    border-top: 1px solid #ddd;
+    padding-top: 20px;
+}
+
+.sub-btn {
+    background-color: #6c757d;
+}
+
+.sub-btn:hover {
+    background-color: #4a4a4a;
+}
