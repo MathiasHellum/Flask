@@ -208,3 +208,68 @@ def find_customer_by_name_and_phone(name, phone_number):
             except Exception as e:
                 print(f"Error: {e}")
     return None
+
+
+def find_customer_by_id(customer_id):
+    driver = _get_connection()
+    if driver:
+        with driver.session() as session:
+            try:
+                result = session.run(
+                    "MATCH (c:Customer) WHERE ID(c) = $customer_id RETURN ID(c) as id, c.name as name, c.email as email, c.phone_number as phone_number",
+                    customer_id=customer_id
+                )
+                record = result.single()
+                if record:
+                    customer = {
+                        'id': record["id"],
+                        'name': record["name"],
+                        'email': record["email"],
+                        'phone_number': record["phone_number"]
+                    }
+                    return customer
+            except Exception as e:
+                print(e)
+    return None
+
+
+def get_booking_for_customer(customer_id):
+    """
+    Fetches the car details booked by a particular customer.
+    
+    Args:
+    - customer_id (int): The ID of the customer.
+    
+    Returns:
+    - dict: A dictionary containing details of the booked car, or None if no booking is found.
+    """
+    driver = _get_connection()
+    if driver:
+        with driver.session() as session:
+            try:
+                result = session.run(
+                    """
+                    MATCH (c:Customer)-[:BOOKED]->(car:Car) WHERE ID(c) = $customer_id 
+                    RETURN 
+                        ID(car) as id,
+                        car.make as make, 
+                        car.model as model, 
+                        car.year as year, 
+                        car.location as location, 
+                        car.status as status
+                    """,
+                    customer_id=customer_id
+                )
+                record = result.single()
+                if record:
+                    return {
+                        'id': record["id"],
+                        'make': record["make"],
+                        'model': record["model"],
+                        'year': record["year"],
+                        'location': record["location"],
+                        'status': record["status"]
+                    }
+            except Exception as e:
+                print(f"Error: {e}")
+    return None

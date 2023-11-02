@@ -1,0 +1,54 @@
+{% extends "base.html.j2" %}
+{% block content %}
+
+<div class="container">
+    <h1>Welcome, {{ customer.name }}</h1>
+    
+    <h2>Your Account Information</h2>
+    <table>
+        <tr>
+            <td>Name:</td>
+            <td>{{ customer.name }}</td>
+        </tr>
+        <tr>
+            <td>Email:</td>
+            <td>{{ customer.email }}</td>
+        </tr>
+        <tr>
+            <td>Phone:</td>
+            <td>{{ customer.phone_number }}</td>
+        </tr>
+    </table>
+
+
+    {% if booking %}
+    <h2>Your Booked Car</h2>
+    <table>
+        <tr>
+            <td>Make:</td>
+            <td>{{ booking.make }}</td>
+        </tr>
+        <tr>
+            <td>Model:</td>
+            <td>{{ booking.model }}</td>
+        </tr>
+        <tr>
+            <td>Year:</td>
+            <td>{{ booking.year }}</td>
+        </tr>
+        <tr>
+            <td>Location:</td>
+            <td>{{ booking.location }}</td>
+        </tr>
+        <tr>
+            <td>Status:</td>
+            <td>{{ booking.status }}</td>
+        </tr>
+    </table>
+    {% else %}
+    <p>You have not booked any cars.</p>
+    <a href="{{ url_for('show_order_car_form', name=customer.name, phone_number=customer.phone_number) }}">Order a Car</a>
+    {% endif %}
+</div>
+
+{% endblock %}

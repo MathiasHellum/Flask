@@ -4,13 +4,10 @@
 <h2>Order a Car</h2>
 
 <form action="/order-car" method="post">
-    <label for="customer">Select Customer:</label>
-    <select name="customer_id" id="customer">
-        {% for customer in customers %}
-            <option value="{{ customer.id }}">{{ customer.name }}</option>
-        {% endfor %}
-    </select>
-    
+    <label for="customer">Logged in as:</label>
+    <input type="text" id="customer" name="customer_name" value="{{ selected_customer.name }}" readonly>
+    <input type="hidden" name="customer_id" value="{{ selected_customer.id }}">
+
     <label for="car">Select Available Car:</label>
     <select name="car_id" id="car">
         {% for car in cars %}

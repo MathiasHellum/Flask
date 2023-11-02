@@ -1,7 +1,7 @@
 from src import app
 from neo4j import GraphDatabase, Driver, AsyncGraphDatabase, AsyncDriver
 import re
-from src.models.Customer import list_of_customers, add_customer, update_customer, delete_customer, is_valid_customer, find_customer_by_name_and_phone
+from src.models.Customer import list_of_customers, add_customer, update_customer, delete_customer, is_valid_customer, find_customer_by_name_and_phone, find_customer_by_id, get_booking_for_customer
 from flask import Flask, render_template, redirect, request, jsonify, url_for
 
 @app.route('/customers')
@@ -112,8 +112,9 @@ def customer_login():
             
             customer = find_customer_by_name_and_phone(name, phone_number)
             if customer:
-                # TODO: Implement any session management or further login processes
-                return jsonify({"message": "Logged in successfully!", "customer": customer})
+                # return jsonify({"message": "Logged in successfully!", "customer": customer})
+                # user_id = customer['id']
+                return redirect(url_for('customer_info', name=name, phone_number=phone_number))
             else:
                 return render_template("customer_login.html.j2", error="Invalid credentials.")
             
@@ -121,26 +122,6 @@ def customer_login():
             return jsonify({"error": str(e)}), 500
     else:
         return render_template("customer_login.html.j2")
-
-# @app.route('/customer/login', methods=["GET", "POST"])
-# def customer_login():
-#     if request.method == "GET":
-#         return render_template("customer_login.html.j2")
-    
-#     elif request.method == "POST":
-#         try:
-#             name = request.form["name"]
-#             phone_number = request.form["phone_number"]
-            
-#             customer = find_customer_by_name_and_phone(name, phone_number)
-#             if customer:
-#                 # TODO: Implement any session management or further login processes
-#                 return jsonify({"message": "Logged in successfully!", "customer": customer})
-#             else:
-#                 return jsonify({"error": "Invalid credentials."}), 401
-            
-#         except Exception as e:
-#             return jsonify({"error": str(e)}), 500
 
 
 @app.route('/customer/register', methods=["GET", "POST"])
@@ -165,37 +146,19 @@ def customer_register():
         return render_template("customer_register.html.j2")
 
 
-# @app.route('/customer/login', methods=["POST"])
-# def customer_login():
-#     """Handles customer login by checking name and phone number."""
-#     try:
-#         name = request.form["name"]
-#         phone_number = request.form["phone_number"]
-        
-#         customer = find_customer_by_name_and_phone(name, phone_number)
-#         if customer:
-#             # TODO: Implement any session management or further login processes
-#             return jsonify({"message": "Logged in successfully!", "customer": customer})
-#         else:
-#             return jsonify({"error": "Invalid credentials."}), 401
-        
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 500
-
-# @app.route('/customer/register', methods=["POST"])
-# def customer_register():
-#     """Handles customer registration."""
-#     try:
-#         name = request.form["name"]
-#         email = request.form["email"]
-#         phone_number = request.form["phone_number"]
-        
-#         existing_customer = find_customer_by_name_and_phone(name, phone_number)
-#         if existing_customer:
-#             return jsonify({"error": "Customer with given name and phone number already exists."}), 409
-        
-#         add_customer(name, email, phone_number)
-#         return jsonify({"message": "Customer registered successfully!"})
+@app.route('/customer/info', methods=["GET"])
+def customer_info():
+    name = request.args.get('name')
+    phone_number = request.args.get('phone_number')
+    # Fetch booking details for the customer
+    customer = find_customer_by_name_and_phone(name, phone_number)
     
-#     except Exception as e:
-#         return jsonify({"error": str(e)}), 500
+    booking = get_booking_for_customer(customer['id'])
+    print()
+    print(booking)
+    print()
+    if customer:
+        return render_template('customer_templates/customer_info.html.j2', customer=customer, booking=booking)
+    else:
+        return "Customer not found", 404
+
