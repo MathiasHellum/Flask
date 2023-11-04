@@ -292,9 +292,47 @@ def cancel_booking_for_customer(customer_id):
                 )
                 
                 # Update car status to available
-                update_car(booked_car_details['id'], "available")
+                if booked_car_details['id'] == "damaged":
+                    # Send signal to database if wanted, log damaged cars.
+                    print("The car is damaged upon return and will not be available for booking.")
+                    return True
+                else:
+                    update_car(booked_car_details['id'], "available")
+                    return True
+            except Exception as e:
+                print(f"Error: {e}")
+                return False
+    return False
+
+
+def return_car_for_customer(customer_id, car_id):
+    driver = _get_connection()
+    if driver:
+        with driver.session() as session:
+            try:
+                # Fetch the car details to check its current status
+                #car_details = get_car_by_id(car_id)
+                booked_car_details = get_booking_for_customer(int(customer_id))
+
+                print(booked_car_details)
+                if not booked_car_details:
+                    raise ValueError("The specified car does not exist.")
+                print("getting this far?")
+
+                # Delete the 'booked' relationship, since that's what we use for renting
+                session.run(
+                    "MATCH (c:Customer)-[rel:BOOKED]->(car:Car) WHERE ID(c) = $customer_id AND ID(car) = $car_id DELETE rel",
+                    customer_id=customer_id, car_id=car_id
+                )
+                
+                if booked_car_details['status'] == "rented":
+                    update_car(booked_car_details['id'], "available")
+                
+                # No change for if the car is damaged, as it will simply remain damaged until the status is changed elsewhere.
+
                 return True
             except Exception as e:
                 print(f"Error: {e}")
                 return False
     return False
+

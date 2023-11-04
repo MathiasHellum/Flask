@@ -154,6 +154,8 @@ def customer_info():
     customer = find_customer_by_name_and_phone(name, phone_number)
     
     booking = get_booking_for_customer(customer['id'])
+    # print("Booking details:")
+    # print(booking)
     if customer:
         return render_template('customer_templates/customer_info.html.j2', customer=customer, booking=booking)
     else:

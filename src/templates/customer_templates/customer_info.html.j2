@@ -41,12 +41,31 @@
             <td>{{ booking.location }}</td>
         </tr>
         <tr>
+            <td>Car ID:</td>
+            <td>{{ booking.id }}</td>
+        </tr>
+        <tr>
             <td>Status:</td>
             <td>{{ booking.status }}</td>
         </tr>
     </table>
 
-    <a href="{{ url_for('show_cancel_booking_form', name=customer.name, phone_number=customer.phone_number) }}">Cancel Order</a>
+    {% if booking.status == 'booked' %}
+        <form action="{{ url_for('rent_car') }}" method="post">
+            <input type="hidden" name="customer_id" value="{{ customer.id }}">
+            <input type="hidden" name="car_id" value="{{ booking.id }}">
+            <input type="submit" value="Rent this Car">
+        </form>
+        <a href="{{ url_for('show_cancel_booking_form', name=customer.name, phone_number=customer.phone_number) }}">Cancel Order</a>
+
+    {% elif booking.status == 'rented' or booking.status == 'damaged' %}
+        <form action="{{ url_for('return_car') }}" method="post">
+            <input type="hidden" name="customer_id" value="{{ customer.id }}">
+            <input type="hidden" name="car_id" value="{{ booking.id }}">
+            <input type="submit" value="Return Car">
+        </form>
+    {% endif %}
+
 
     {% else %}
     <p>You have not booked any cars.</p>

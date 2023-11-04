@@ -1,0 +1,22 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+<!-- Return Car Form -->
+{% if renting %}
+    <h2>Return Rented Car</h2>
+    <form action="{{ url_for('return_car') }}" method="post">
+        <input type="hidden" name="customer_id" value="{{ customer.id }}">
+        <input type="hidden" name="car_id" value="{{ renting.id }}">
+
+        <label for="status">Car Condition:</label>
+        <select name="status" id="status">
+            <option value="ok">OK</option>
+            <option value="damaged">Damaged</option>
+        </select>
+
+        <input type="submit" value="Return Car">
+    </form>
+{% else %}
+    <p>You do not have any rented cars to return at this moment.</p>
+{% endif %}
+{% endblock %}

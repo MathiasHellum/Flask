@@ -1,0 +1,16 @@
+{% extends "base.html.j2" %}
+
+{% block content %}
+<!-- Rent Car Form -->
+{% if booking and booking.status == 'booked' %}
+    <h2>Rent Your Booked Car</h2>
+    <form action="{{ url_for('rent_car') }}" method="post">
+        <input type="hidden" name="customer_id" value="{{ customer.id }}">
+        <input type="hidden" name="car_id" value="{{ booking.car_id }}">
+
+        <input type="submit" value="Rent Car">
+    </form>
+{% else %}
+    <p>You do not have any cars to rent at this moment.</p>
+{% endif %}
+{% endblock %}
