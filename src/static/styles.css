@@ -82,3 +82,61 @@ h1 {
 .sub-btn:hover {
     background-color: #4a4a4a;
 }
+
+
+/* Base styles for the table to make it cleaner */
+.info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.info-table td, .info-table th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.info-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.info-table tr:hover {
+    background-color: #ddd;
+}
+
+.info-table th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* New button styling */
+.btn {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.btn:hover {
+    background-color: #45a049;
+}
+
+/* Additional button style for 'warning' actions like cancelling */
+.btn-warning {
+    background-color: #f44336; /* Red */
+}
+
+.btn-warning:hover {
+    background-color: #da190b;
+}

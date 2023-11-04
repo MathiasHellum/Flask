@@ -2,75 +2,60 @@
 {% block content %}
 
 <div class="container">
-    <h1>Welcome, {{ customer.name }}</h1>
-    
-    <h2>Your Account Information</h2>
-    <table>
-        <tr>
-            <td>Name:</td>
-            <td>{{ customer.name }}</td>
-        </tr>
-        <tr>
-            <td>Email:</td>
-            <td>{{ customer.email }}</td>
-        </tr>
-        <tr>
-            <td>Phone:</td>
-            <td>{{ customer.phone_number }}</td>
-        </tr>
-    </table>
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="text-center mb-4">
+                <h1>Welcome, {{ customer.name }}</h1>
+            </div>
 
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h2>Your Account Information</h2>
+                </div>
+                <div class="card-body">
+                    <p><strong>Name:</strong> {{ customer.name }}</p>
+                    <p><strong>Email:</strong> {{ customer.email }}</p>
+                    <p><strong>Phone:</strong> {{ customer.phone_number }}</p>
+                </div>
+            </div>
 
-    {% if booking %}
-    <h2>Your Booked Car</h2>
-    <table>
-        <tr>
-            <td>Make:</td>
-            <td>{{ booking.make }}</td>
-        </tr>
-        <tr>
-            <td>Model:</td>
-            <td>{{ booking.model }}</td>
-        </tr>
-        <tr>
-            <td>Year:</td>
-            <td>{{ booking.year }}</td>
-        </tr>
-        <tr>
-            <td>Location:</td>
-            <td>{{ booking.location }}</td>
-        </tr>
-        <tr>
-            <td>Car ID:</td>
-            <td>{{ booking.id }}</td>
-        </tr>
-        <tr>
-            <td>Status:</td>
-            <td>{{ booking.status }}</td>
-        </tr>
-    </table>
+            {% if booking %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h2>Your Booked Car</h2>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Make:</strong> {{ booking.make }}</p>
+                        <p><strong>Model:</strong> {{ booking.model }}</p>
+                        <p><strong>Year:</strong> {{ booking.year }}</p>
+                        <p><strong>Location:</strong> {{ booking.location }}</p>
 
-    {% if booking.status == 'booked' %}
-        <form action="{{ url_for('rent_car') }}" method="post">
-            <input type="hidden" name="customer_id" value="{{ customer.id }}">
-            <input type="hidden" name="car_id" value="{{ booking.id }}">
-            <input type="submit" value="Rent this Car">
-        </form>
-        <a href="{{ url_for('show_cancel_booking_form', name=customer.name, phone_number=customer.phone_number) }}">Cancel Order</a>
-
-    {% elif booking.status == 'rented' or booking.status == 'damaged' %}
-        <form action="{{ url_for('return_car') }}" method="post">
-            <input type="hidden" name="customer_id" value="{{ customer.id }}">
-            <input type="hidden" name="car_id" value="{{ booking.id }}">
-            <input type="submit" value="Return Car">
-        </form>
-    {% endif %}
-
-
-    {% else %}
-    <p>You have not booked any cars.</p>
-    <a href="{{ url_for('show_order_car_form', name=customer.name, phone_number=customer.phone_number) }}">Order a Car</a>
-    {% endif %}
+                        <p><strong>Status:</strong> {{ booking.status }}</p>
+                        
+                        {% if booking.status == 'booked' %}
+                            <form action="{{ url_for('rent_car') }}" method="post" class="mb-2">
+                                <input type="hidden" name="customer_id" value="{{ customer.id }}">
+                                <input type="hidden" name="car_id" value="{{ booking.id }}">
+                                <button type="submit" class="btn btn-success">Rent this Car</button>
+                            </form>
+                            <a href="{{ url_for('show_cancel_booking_form', name=customer.name, phone_number=customer.phone_number) }}" class="btn btn-warning">Cancel Order</a>
+                        {% elif booking.status == 'rented' or booking.status == 'damaged' %}
+                            <form action="{{ url_for('return_car') }}" method="post">
+                                <input type="hidden" name="customer_id" value="{{ customer.id }}">
+                                <input type="hidden" name="car_id" value="{{ booking.id }}">
+                                <button type="submit" class="btn btn-primary">Return Car</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            {% else %}
+                <div class="text-center">
+                    <p>You have not booked any cars.</p>
+                    <a href="{{ url_for('show_order_car_form', name=customer.name, phone_number=customer.phone_number) }}" class="btn btn-primary">Order a Car</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
 </div>
 
 {% endblock %}

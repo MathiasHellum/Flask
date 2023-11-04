@@ -2,21 +2,48 @@
 
 {% block content %}
 <div class="container">
-    <h2>Cancel Booking</h2>
-    {% if booking %}
-    <p>Booking details:</p>
-    <ul>
-        <li>Car Make: {{ booking.make }}</li>
-        <li>Car Model: {{ booking.model }}</li>
-        <li>Year: {{ booking.year }}</li>
-        <li>Location: {{ booking.location }}</li>
-    </ul>
-    <form action="/cancel-booking" method="post">
-        <input type="hidden" name="customer_id" value="{{ selected_customer.id }}">
-        <button type="submit">Cancel Booking</button>
-    </form>
-    {% else %}
-    <p>No active booking found for the customer.</p>
-    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="text-center mb-4">
+                <h2>Cancel Booking</h2>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    {% if booking %}
+                    <p class="text-center">Booking details:</p>
+                    <table class="table">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Car Make:</th>
+                                <td>{{ booking.make }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Car Model:</th>
+                                <td>{{ booking.model }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Year:</th>
+                                <td>{{ booking.year }}</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Location:</th>
+                                <td>{{ booking.location }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <form action="/cancel-booking" method="post" class="text-center">
+                        <input type="hidden" name="customer_id" value="{{ selected_customer.id }}">
+                        <button type="submit" class="btn btn-danger">Cancel Booking</button>
+                    </form>
+                    {% else %}
+                    <div class="alert alert-info" role="alert">
+                        No active booking found for the customer.
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
