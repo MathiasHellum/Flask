@@ -311,7 +311,6 @@ def return_car_for_customer(customer_id, car_id):
         with driver.session() as session:
             try:
                 # Fetch the car details to check its current status
-                #car_details = get_car_by_id(car_id)
                 booked_car_details = get_booking_for_customer(int(customer_id))
 
                 print(booked_car_details)

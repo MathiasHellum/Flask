@@ -11,3 +11,4 @@ Go to the desired folder & open commandline or gitbash. Do the following command
 
 #
 The last command installs all the required packages in the venv
+Demolink: https://youtu.be/Hm5eDsJ98wc 

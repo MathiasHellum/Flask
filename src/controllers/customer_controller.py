@@ -1,8 +1,8 @@
 from src import app
 from neo4j import GraphDatabase, Driver, AsyncGraphDatabase, AsyncDriver
 import re
-from src.models.Customer import list_of_customers, add_customer, update_customer, delete_customer, is_valid_customer, find_customer_by_name_and_phone, find_customer_by_id, get_booking_for_customer
-from flask import Flask, render_template, redirect, request, jsonify, url_for
+from src.models.Customer import list_of_customers, add_customer, update_customer, delete_customer, is_valid_customer, find_customer_by_name_and_phone, get_booking_for_customer
+from flask import render_template, redirect, request, jsonify, url_for
 
 @app.route('/customers')
 def customer_overview():

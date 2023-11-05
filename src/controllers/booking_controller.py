@@ -1,7 +1,7 @@
 from src import app
 from flask import jsonify, redirect, render_template, request, url_for
-from src.models.Car import get_car_by_id, get_all_available_cars, is_valid, list_of_cars, update_car, change_car_status
-from src.models.Customer import has_customer_booked_or_rented, book_car_for_customer, list_of_customers, find_customer_by_name_and_phone, find_customer_by_id, cancel_booking_for_customer, return_car_for_customer
+from src.models.Car import get_car_by_id, list_of_cars, update_car
+from src.models.Customer import has_customer_booked_or_rented, book_car_for_customer, find_customer_by_name_and_phone, find_customer_by_id, cancel_booking_for_customer
 from src.controllers.customer_controller import get_booking_for_customer
 
 
@@ -41,7 +41,6 @@ def order_car():
         name = customer_details['name']
         phone_number = customer_details['phone_number']
         return redirect(url_for("customer_info", name=name, phone_number=phone_number))
-    #return jsonify({"success": "Car booked successfully"}), 200
 
 
 @app.route('/cancel-booking', methods=["GET"])

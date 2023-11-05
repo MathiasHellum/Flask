@@ -2,7 +2,7 @@ from src import app
 from neo4j import GraphDatabase, Driver, AsyncGraphDatabase, AsyncDriver
 import re
 from src.models.Car import list_of_cars, add_car, update_car, delete_car, is_valid
-from flask import Flask, render_template, redirect, request, jsonify
+from flask import render_template, redirect, request
 
 
 @app.route('/cars')

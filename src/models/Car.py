@@ -162,33 +162,3 @@ def get_all_available_cars():
                 print(str(e))
     return []
 
-
-def change_car_status(customer_id, car_id, new_status, check_current_status):
-    print("Am I getting all the info? #########")
-    print("1 customer id: ", customer_id)
-    print("2 car id: ", car_id)
-    print("3 new status: ", new_status)
-    print("4 check current status: ", check_current_status)
-
-    driver = _get_connection()
-    if not driver:
-        return False, "Database connection error."
-    
-    with driver.session() as session:
-        try:
-            result = session.run(
-                """
-                MATCH (c:Customer)-[r:BOOKED]->(car:Car) 
-                WHERE ID(c) = $customer_id AND ID(car) = $car_id AND car.status = $check_current_status
-                SET car.status = $new_status
-                RETURN car
-                """,
-                customer_id=customer_id, car_id=car_id, check_current_status=check_current_status, new_status=new_status
-            )
-            car = result.single()
-            if car:
-                return True, "Car status updated successfully."
-            else:
-                return False, f"No car found with the status '{check_current_status}' for the given customer."
-        except Exception as e:
-            return False, str(e)
